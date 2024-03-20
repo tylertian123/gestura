@@ -17,8 +17,11 @@ There are buttons on the bottom bar to build and flash the project, and open the
 ## Useful Documentation
 
 * [ESP32-C6-DevKitC-1 User Guide](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/esp32c6/esp32-c6-devkitc-1/user_guide.html)
+    * [ESP32-C6 Technical Reference Manual](https://www.espressif.com/sites/default/files/documentation/esp32-c6_technical_reference_manual_en.pdf)
+    * [ESP32-C6 Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf)
+    * [ESP32-C6-WROOM-1 Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-c6-wroom-1_wroom-1u_datasheet_en.pdf)
+* [ESP-IDF Examples](https://github.com/espressif/esp-idf/blob/master/examples/)
 * [ESP-IDF Get Started](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c6/get-started/index.html)
 * [ESP-IDF VS Code Extension User Guide](https://github.com/espressif/vscode-esp-idf-extension/blob/master/docs/tutorial/basic_use.md)
-* [ESP-IDF Examples](https://github.com/espressif/esp-idf/blob/master/examples/)
 
 ![ESP32-C6-DevKitC-1 Pinout](https://docs.espressif.com/projects/espressif-esp-dev-kits/en/latest/_images/esp32-c6-devkitc-1-pin-layout.png)
