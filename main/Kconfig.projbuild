@@ -1,0 +1,16 @@
+menu "GPIO Allocation"
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
+
+    config FLEX_ADC_UNIT
+        int "Flex sensor ADC unit number"
+        default 1
+    
+    config FLEX_SHORT_ADC_CHAN
+        int "Short flex sensor ADC channel number"
+        default 5
+
+    config FLEX_LONG_ADC_CHAN
+        int "Long flex sensor ADC channel number"
+        default 6
+
+endmenu
