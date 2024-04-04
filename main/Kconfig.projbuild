@@ -13,4 +13,27 @@ menu "GPIO Allocation"
         int "Long flex sensor ADC channel number"
         default 6
 
+    config IMU_MOSI
+        int "MOSI GPIO pin for IMU"
+        default 21
+    
+    config IMU_MISO
+        int "MISO GPIO pin for IMU"
+        default 20
+    
+    config IMU_SCLK
+        int "SCLK GPIO pin for IMU"
+        default 19
+    
+    config IMU_CS
+        int "CS GPIO pin for IMU"
+        default 22
+    
+    config IMU_HINT
+        int "Host interrupt GPIO pin for IMU"
+        default 15
+    
+    config IMU_RST
+        int "Reset GPIO pin for IMU"
+        default 23
 endmenu

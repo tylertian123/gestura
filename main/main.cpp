@@ -1,14 +1,13 @@
-#include <stdio.h>
 #include "esp_err.h"
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "util.hpp"
-#include "gpio.hpp"
-#include "flex_sensor.hpp"
+#include "BNO08x.hpp"
 
-#include "hal/gpio_types.h"
-#include "esp_log.h"
+#include "hal/spi_types.h"
+#include "util.hpp"
+
 
 static const char *TAG = "main";
 
@@ -16,28 +15,25 @@ extern "C" void app_main(void) {
     
     ESP_LOGI(TAG, "Program init");
 
-    hw::GPIO led(4, GPIO_MODE_OUTPUT);
+    // TODO: These should use the CONFIG_IMU_x macros as defined in sdkconfig.h from Kconfig
+    bno08x_config_t config{SPI2_HOST, GPIO_NUM_21, GPIO_NUM_20, GPIO_NUM_19, 
+        GPIO_NUM_22, GPIO_NUM_15, GPIO_NUM_23, GPIO_NUM_NC, 100000UL, true};
+    BNO08x imu{config};
 
-    hw::FlexSensorArray flex;
 
-    ESP_ERROR_CHECK(flex.init());
-    // Make sure we have samples
-    DELAY_MS(10);
-
-    while (true) {
-        esp_err_t err = flex.read_raw();
-        if (err == ESP_OK) {
-            ESP_LOGI(TAG, "Long: %" PRId16 "; short: %" PRId16, flex.long_raw, flex.short_raw);
-            led = flex.long_raw > flex.short_raw;
-        }
-        else if (err == ESP_ERR_TIMEOUT) {
-            ESP_LOGE(TAG, "ADC read timeout!");
-        }
-        else {
-            ESP_ERROR_CHECK(err);
-        }
-        DELAY_MS(100);
+    if(!imu.initialize()) {
+        ESP_LOGE(TAG, "Failed to initialize IMU");
     }
 
-    ESP_ERROR_CHECK(flex.stop());
+    //enable gyro & game rotation vector
+    imu.enable_rotation_vector(100000UL); //100,000us == 100ms report interval
+
+    while(1)
+    {
+        //print absolute heading in degrees and angular velocity in Rad/s
+        if(imu.data_available())
+        {
+            ESP_LOGI("Main", "Euler Angle: x (roll): %.3f y (pitch): %.3f z (yaw): %.3f", imu.get_roll_deg(), imu.get_pitch_deg(), imu.get_yaw_deg());
+        }
+    }
 }
