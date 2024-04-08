@@ -1,3 +1,23 @@
+menu "Project Configuration"
+
+    config STREAM_WIFI_SSID
+        string "Wi-Fi AP SSID"
+        default "Gestura-AP"
+        help
+            "Name of Wi-Fi network created for data stream; must be 31 chars or less"
+    
+    config STREAM_WIFI_PASSWD
+        string "Wi-Fi AP password"
+        default "Gestura-AP"
+        help
+            "Password of Wi-Fi network created for data stream; must be between 8 and 63 chars"
+
+    config STREAM_WIFI_CHAN
+        int "Wi-Fi AP channel"
+        range 1 13
+        default 1
+endmenu
+
 menu "GPIO Allocation"
     orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
 

@@ -1,4 +1,4 @@
-idf_component_register(SRCS "pose_integrator.cpp" "flex_sensor.cpp" "gpio.cpp" "main.cpp"
+idf_component_register(SRCS "stream.cpp" "pose_integrator.cpp" "flex_sensor.cpp" "gpio.cpp" "main.cpp"
                     INCLUDE_DIRS ".")
 
 add_compile_definitions("ESP32C3_IMU_CONFIG")
