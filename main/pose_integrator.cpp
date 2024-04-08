@@ -62,7 +62,7 @@ namespace algo {
                 self->vel = self->vel + self->accel * self->dt;
 
                 // Check if stationary, use as opportunity to correct drift
-                if (self->accel(2) < accel_thres) { // Relies on rotation being correct
+                if (self->accel(2) < ACCEL_THRES) { // Relies on rotation being correct
                     if (self->time_near_zero == 0) { // Beginning of zero accel period
                         self->pos_on_stop = self->pos;
                     }
@@ -73,7 +73,7 @@ namespace algo {
                 }
 
                 // Check if we've had low accel for some time (i.e. a pause)
-                if (self->time_near_zero > time_thres) {
+                if (self->time_near_zero > TIME_THRES) {
                     // TODO: Correct drift better, maybe don't just blindly reset pose to before the pause
                     self->pos = self->pos_on_stop;
 
