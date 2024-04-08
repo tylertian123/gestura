@@ -37,25 +37,25 @@ namespace algo {
         StackType_t task_stack[STACK_SIZE];
 
         // In IMU frame
-        Eigen::Vector3d accel_local{0, 0, 0};
+        Eigen::Vector3f accel_local{0, 0, 0};
 
         // In global frame
-        Eigen::Vector3d accel{0, 0, 0};
-        Eigen::Vector3d vel{0, 0, 0};
-        Eigen::Vector3d pos{0, 0, 0};
+        Eigen::Vector3f accel{0, 0, 0};
+        Eigen::Vector3f vel{0, 0, 0};
+        Eigen::Vector3f pos{0, 0, 0};
 
-        Eigen::Quaterniond rotation;
+        Eigen::Quaternionf rotation;
 
-        double dt = 0.0;
+        float dt = 0.0;
         uint32_t start_time = 0; // 100 microsec ticks
         uint32_t end_time = 0; // 100 microsec ticks
 
         // Thresholds for determining if stationary (i.e. if we should correct drift)
-        static constexpr double ACCEL_THRES = 0.1; // Tune (m/s^2)
+        static constexpr float ACCEL_THRES = 0.1; // Tune (m/s^2)
         static constexpr uint32_t TIME_THRES = 2500; // Tune (100 microsec ticks)
         uint32_t time_near_zero = 0; // 100 microsec ticks
 
-        Eigen::Vector3d pos_on_stop{0, 0, 0};
+        Eigen::Vector3f pos_on_stop{0, 0, 0};
 
         static void main_task(void *params);
 

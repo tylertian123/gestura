@@ -37,7 +37,7 @@ namespace algo {
 
                 // Timing
                 self->end_time = self->imu.get_time_stamp();
-                self->dt = (double) ((self->end_time - self->start_time) / 10000.0); // Convert to sec
+                self->dt = (float) ((self->end_time - self->start_time) / 10000.0); // Convert to sec
 
                 // Read linear accel values (gravity removed)
                 self->accel_local(0) = self->imu.get_linear_accel_X();
@@ -52,10 +52,10 @@ namespace algo {
 
                 // Rotate accel vector
                 self->rotation.normalize();
-                Eigen::Quaterniond accel_local_q;
+                Eigen::Quaternionf accel_local_q;
                 accel_local_q.vec() = self->accel_local;
                 accel_local_q.w() = 0;
-                Eigen::Quaterniond rotated = self->rotation * accel_local_q * self->rotation.inverse(); // Double check
+                Eigen::Quaternionf rotated = self->rotation * accel_local_q * self->rotation.inverse(); // Double check
                 self->accel = rotated.vec();
 
                 // Integrate to get vel
