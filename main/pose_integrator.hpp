@@ -47,13 +47,13 @@ namespace algo {
         Eigen::Quaternionf rotation;
 
         float dt = 0.0;
-        uint32_t start_time = 0; // 100 microsec ticks
-        uint32_t end_time = 0; // 100 microsec ticks
+        int64_t start_time = 0; // microseconds
+        int64_t end_time = 0; // microseconds
 
         // Thresholds for determining if stationary (i.e. if we should correct drift)
-        static constexpr float ACCEL_THRES = 0.1; // Tune (m/s^2)
-        static constexpr uint32_t TIME_THRES = 2500; // Tune (100 microsec ticks)
-        uint32_t time_near_zero = 0; // 100 microsec ticks
+        static constexpr float ACCEL_THRES = 0.1f; // Tune (m/s^2)
+        static constexpr int64_t TIME_THRES = 250000L; // Tune (us)
+        int64_t time_near_zero = 0; // microseconds
 
         Eigen::Vector3f pos_on_stop{0, 0, 0};
 

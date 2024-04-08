@@ -1,5 +1,7 @@
 #include "pose_integrator.hpp"
+
 #include "esp_log.h"
+#include "esp_timer.h"
 
 namespace algo {
     bool PoseIntegrator::init() {
@@ -28,7 +30,7 @@ namespace algo {
         self->start_time = self->imu.get_time_stamp();
 
         // TODO: Remove
-        // uint32_t count = 0;
+        uint32_t count = 0;
 
         while (true) {
 
@@ -36,8 +38,8 @@ namespace algo {
             if (self->imu.data_available()) {
 
                 // Timing
-                self->end_time = self->imu.get_time_stamp();
-                self->dt = (float) ((self->end_time - self->start_time) / 10000.0); // Convert to sec
+                self->end_time = esp_timer_get_time();
+                self->dt = (self->end_time - self->start_time) * 1e-6f; // Convert to sec
 
                 // Read linear accel values (gravity removed)
                 self->accel_local(0) = self->imu.get_linear_accel_X();
@@ -51,7 +53,7 @@ namespace algo {
                 self->rotation.w() = self->imu.get_quat_real();
 
                 // Rotate accel vector
-                self->rotation.normalize();
+                //self->rotation.normalize();
                 Eigen::Quaternionf accel_local_q;
                 accel_local_q.vec() = self->accel_local;
                 accel_local_q.w() = 0;
@@ -86,14 +88,18 @@ namespace algo {
                 self->pos = self->pos + self->vel * self->dt;
 
                 // TODO: Remove (this is for demo/testing only)
-                // count ++;
-                // if (count >= 200) {
-                //     count = 0;
-                //     // This will get logged twice a second
-                //     // Both rot vec and accel are at 200 Hz so in total data is available at 400 Hz
-                //     // data_available() doesn't return the type of update, but we can modify it to do so easily enough
-                //     ESP_LOGI("poseint", "Got 200 samples");
-                // }
+                count ++;
+                if (count >= 25) {
+                    count = 0;
+                    // This will get logged twice a second
+                    // Both rot vec and accel are at 200 Hz so in total data is available at 400 Hz
+                    // data_available() doesn't return the type of update, but we can modify it to do so easily enough
+                    //ESP_LOGI("poseint", "Got 200 samples");
+                    //ESP_LOGI("poseint", "dt: %f", self->dt);
+                    //ESP_LOGI("poseint", "P: <%f, %f, %f>", self->pos(0), self->pos(1), self->pos(2));
+                    //ESP_LOGI("poseint", "V: <%f, %f, %f>", self->vel(0), self->vel(1), self->vel(2));
+                    ESP_LOGI("poseint", "A: <%f, %f, %f>", self->accel_local(0), self->accel_local(1), self->accel_local(2));
+                }
 
                 self->start_time = self->end_time;
             }
