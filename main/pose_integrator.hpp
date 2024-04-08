@@ -29,6 +29,8 @@ namespace algo {
             IMU_CS, IMU_HINT, IMU_RST, GPIO_NUM_NC, 2000000UL, false};
         BNO08x imu{imu_cfg};
 
+        static constexpr const char *TAG = "poseint";
+
         // Increase this if we run out
         // StackType_t is uint8_t so this is in bytes
         static constexpr size_t STACK_SIZE = 2048;

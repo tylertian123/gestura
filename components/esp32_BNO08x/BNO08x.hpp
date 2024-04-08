@@ -273,6 +273,28 @@ class BNO08x
         static const constexpr int16_t ANGULAR_VELOCITY_Q1 = 10;         ///< Angular velocity Q point (See SH-2 Ref. Manual 6.5.44)
         static const constexpr int16_t GRAVITY_Q1 = 8;                   ///< Gravity Q point (See SH-2 Ref. Manual 6.5.11)
 
+        // Sensor report IDs, used when enabling and reading BNO08x reports
+        static const constexpr uint8_t SENSOR_REPORTID_ACCELEROMETER = 0x01;                         ///< See SH2 Ref. Manual 6.5.9
+        static const constexpr uint8_t SENSOR_REPORTID_GYROSCOPE = 0x02;                             ///< See SH2 Ref. Manual 6.5.13
+        static const constexpr uint8_t SENSOR_REPORTID_MAGNETIC_FIELD = 0x03;                        ///< See SH2 Ref. Manual 6.5.16
+        static const constexpr uint8_t SENSOR_REPORTID_LINEAR_ACCELERATION = 0x04;                   ///< See SH2 Ref. Manual 6.5.10
+        static const constexpr uint8_t SENSOR_REPORTID_ROTATION_VECTOR = 0x05;                       ///< See SH2 Ref. Manual 6.5.18
+        static const constexpr uint8_t SENSOR_REPORTID_GRAVITY = 0x06;                               ///< See SH2 Ref. Manual 6.5.11
+        static const constexpr uint8_t SENSOR_REPORTID_UNCALIBRATED_GYRO = 0x07;                     ///< See SH2 Ref. Manual 6.5.14
+        static const constexpr uint8_t SENSOR_REPORTID_GAME_ROTATION_VECTOR = 0x08;                  ///< See SH2 Ref. Manual 6.5.19
+        static const constexpr uint8_t SENSOR_REPORTID_GEOMAGNETIC_ROTATION_VECTOR = 0x09;           ///< See SH2 Ref. Manual 6.5.20
+        static const constexpr uint8_t SENSOR_REPORTID_GYRO_INTEGRATED_ROTATION_VECTOR = 0x2A;       ///< See SH2 Ref. Manual 6.5.44
+        static const constexpr uint8_t SENSOR_REPORTID_TAP_DETECTOR = 0x10;                          ///< See SH2 Ref. Manual 6.5.27
+        static const constexpr uint8_t SENSOR_REPORTID_STEP_COUNTER = 0x11;                          ///< See SH2 Ref. Manual 6.5.29
+        static const constexpr uint8_t SENSOR_REPORTID_STABILITY_CLASSIFIER = 0x13;                  ///< See SH2 Ref. Manual 6.5.31
+        static const constexpr uint8_t SENSOR_REPORTID_RAW_ACCELEROMETER = 0x14;                     ///< See SH2 Ref. Manual 6.5.8
+        static const constexpr uint8_t SENSOR_REPORTID_RAW_GYROSCOPE = 0x15;                         ///< See SH2 Ref. Manual 6.5.12
+        static const constexpr uint8_t SENSOR_REPORTID_RAW_MAGNETOMETER = 0x16;                      ///< See SH2 Ref. Manual 6.5.15
+        static const constexpr uint8_t SENSOR_REPORTID_PERSONAL_ACTIVITY_CLASSIFIER = 0x1E;          ///< See SH2 Ref. Manual 6.5.36
+        static const constexpr uint8_t SENSOR_REPORTID_AR_VR_STABILIZED_ROTATION_VECTOR = 0x28;      ///< See SH2 Ref. Manual 6.5.42
+        static const constexpr uint8_t SENSOR_REPORTID_AR_VR_STABILIZED_GAME_ROTATION_VECTOR = 0x29; ///< See SH2 Ref. Manual 6.5.43
+
+
     private:
         bool wait_for_device_int();
         bool receive_packet();
@@ -287,7 +309,7 @@ class BNO08x
 
         static bno08x_config_t default_imu_config; ///< default imu config settings
 
-         SemaphoreHandle_t tx_semaphore; ///<Used to indicate to spi_task() whether or not a packet is currently waiting to be sent.
+        SemaphoreHandle_t tx_semaphore; ///<Used to indicate to spi_task() whether or not a packet is currently waiting to be sent.
         SemaphoreHandle_t
                 int_asserted_semaphore; ///<Binary semaphore used to synchronize spi_task() calling wait_for_device_int(), given after hint_handler ISR launches SPI task and it has run to completion
         uint8_t rx_buffer[300];         ///<buffer used to receive packet with receive_packet()
@@ -377,27 +399,6 @@ class BNO08x
         static const constexpr uint8_t SHTP_REPORT_PRODUCT_ID_REQUEST = 0xF9;  ///< See SH2 Ref. Manual 6.3.1
         static const constexpr uint8_t SHTP_REPORT_BASE_TIMESTAMP = 0xFB;      ///< See SH2 Ref. Manual 7.2.1
         static const constexpr uint8_t SHTP_REPORT_SET_FEATURE_COMMAND = 0xFD; ///< See SH2 Ref. Manual 6.5.4
-
-        // Sensor report IDs, used when enabling and reading BNO08x reports
-        static const constexpr uint8_t SENSOR_REPORTID_ACCELEROMETER = 0x01;                         ///< See SH2 Ref. Manual 6.5.9
-        static const constexpr uint8_t SENSOR_REPORTID_GYROSCOPE = 0x02;                             ///< See SH2 Ref. Manual 6.5.13
-        static const constexpr uint8_t SENSOR_REPORTID_MAGNETIC_FIELD = 0x03;                        ///< See SH2 Ref. Manual 6.5.16
-        static const constexpr uint8_t SENSOR_REPORTID_LINEAR_ACCELERATION = 0x04;                   ///< See SH2 Ref. Manual 6.5.10
-        static const constexpr uint8_t SENSOR_REPORTID_ROTATION_VECTOR = 0x05;                       ///< See SH2 Ref. Manual 6.5.18
-        static const constexpr uint8_t SENSOR_REPORTID_GRAVITY = 0x06;                               ///< See SH2 Ref. Manual 6.5.11
-        static const constexpr uint8_t SENSOR_REPORTID_UNCALIBRATED_GYRO = 0x07;                     ///< See SH2 Ref. Manual 6.5.14
-        static const constexpr uint8_t SENSOR_REPORTID_GAME_ROTATION_VECTOR = 0x08;                  ///< See SH2 Ref. Manual 6.5.19
-        static const constexpr uint8_t SENSOR_REPORTID_GEOMAGNETIC_ROTATION_VECTOR = 0x09;           ///< See SH2 Ref. Manual 6.5.20
-        static const constexpr uint8_t SENSOR_REPORTID_GYRO_INTEGRATED_ROTATION_VECTOR = 0x2A;       ///< See SH2 Ref. Manual 6.5.44
-        static const constexpr uint8_t SENSOR_REPORTID_TAP_DETECTOR = 0x10;                          ///< See SH2 Ref. Manual 6.5.27
-        static const constexpr uint8_t SENSOR_REPORTID_STEP_COUNTER = 0x11;                          ///< See SH2 Ref. Manual 6.5.29
-        static const constexpr uint8_t SENSOR_REPORTID_STABILITY_CLASSIFIER = 0x13;                  ///< See SH2 Ref. Manual 6.5.31
-        static const constexpr uint8_t SENSOR_REPORTID_RAW_ACCELEROMETER = 0x14;                     ///< See SH2 Ref. Manual 6.5.8
-        static const constexpr uint8_t SENSOR_REPORTID_RAW_GYROSCOPE = 0x15;                         ///< See SH2 Ref. Manual 6.5.12
-        static const constexpr uint8_t SENSOR_REPORTID_RAW_MAGNETOMETER = 0x16;                      ///< See SH2 Ref. Manual 6.5.15
-        static const constexpr uint8_t SENSOR_REPORTID_PERSONAL_ACTIVITY_CLASSIFIER = 0x1E;          ///< See SH2 Ref. Manual 6.5.36
-        static const constexpr uint8_t SENSOR_REPORTID_AR_VR_STABILIZED_ROTATION_VECTOR = 0x28;      ///< See SH2 Ref. Manual 6.5.42
-        static const constexpr uint8_t SENSOR_REPORTID_AR_VR_STABILIZED_GAME_ROTATION_VECTOR = 0x29; ///< See SH2 Ref. Manual 6.5.43
 
         // Tare commands used by queue_tare_command
         static const constexpr uint8_t TARE_NOW = 0;               ///< See SH2 Ref. Manual 6.4.4.1
