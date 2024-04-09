@@ -4,6 +4,9 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
+#include "freertos/projdefs.h"
+#include "stream.hpp"
+
 namespace algo {
     bool PoseIntegrator::init() {
         if (!imu.initialize()) {
@@ -18,7 +21,8 @@ namespace algo {
         return true;
     }
 
-    void PoseIntegrator::start_task() {
+    void PoseIntegrator::start_task(QueueHandle_t out_queue) {
+        queue = out_queue;
         // Use priority of 4 for this task (larger number = higher priority)
         // Note main task has priority 1, and IMU SPI task has priority 8
         task_handle = xTaskCreateStatic(main_task, "pose_integrator", STACK_SIZE, 
@@ -36,6 +40,22 @@ namespace algo {
         uint32_t count = 0;
 
         while (true) {
+
+            int64_t cur_time = esp_timer_get_time();
+            if (cur_time - self->last_send > REPORT_PERIOD) {
+                self->last_send = cur_time;
+                io::Message msg = {
+                    .type = io::Message::Type::POSITION,
+                    .position = {
+                        .x = self->pos(0),
+                        .y = self->pos(1),
+                        .z = self->pos(2),
+                    }
+                };
+                if (xQueueSend(self->queue, &msg, 0) != pdTRUE) {
+                    ESP_LOGW(TAG, "Could not send pose: queue full");
+                }
+            }
 
             // This will block on a semaphore until data is available
             uint16_t report_id = self->imu.get_readings();

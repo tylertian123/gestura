@@ -6,13 +6,43 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/queue.h"
 
 #include "sdkconfig.h"
 
 namespace io {
+    struct Message {
+    public:
+        enum Gesture : uint8_t {
+            CALIBRATION = 0,
+            PEN_UP = 1,
+            PEN_DOWN = 2,
+            ERASE = 3,
+        };
+        struct Position {
+            float x;
+            float y;
+            float z;
+        };
+
+        enum Type : uint8_t {
+            GESTURE = 0,
+            POSITION = 1,
+        } type;
+        union {
+            Gesture gesture;
+            Position position;
+        };
+
+        static constexpr size_t SIZE_GESTURE = sizeof(Type) + sizeof(Gesture);
+        static constexpr size_t SIZE_POSITION = sizeof(Type) + sizeof(Position);
+    };
+
     class DataStreamer {
     private:
         esp_netif_t *netif_inst = nullptr;
+
+        QueueHandle_t queue;
 
         int listen_sock = -1;
         int client_sock = -1;
@@ -35,6 +65,6 @@ namespace io {
         DataStreamer() {};
 
         esp_err_t init();
-        void start_task();
+        void start_task(QueueHandle_t in_queue);
     };
 }

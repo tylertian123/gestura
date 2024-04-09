@@ -6,8 +6,10 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "hal/spi_types.h"
+#include "freertos/queue.h"
 #include "portmacro.h"
+
+#include "hal/spi_types.h"
 #include "soc/gpio_num.h"
 
 #include "BNO08x.hpp"
@@ -38,6 +40,8 @@ namespace algo {
         StaticTask_t task_tcb;
         StackType_t task_stack[STACK_SIZE];
 
+        QueueHandle_t queue;
+
         // In IMU frame
         Eigen::Vector3f accel_local{0, 0, 0};
 
@@ -51,6 +55,8 @@ namespace algo {
         float dt = 0.0;
         int64_t start_time = 0; // microseconds
         int64_t end_time = 0; // microseconds
+        int64_t last_send = 0; // microseconds
+        static constexpr int64_t REPORT_PERIOD = 200000; // microseconds
 
         // Thresholds for determining if stationary (i.e. if we should correct drift)
         static constexpr float ACCEL_THRES = 1.0f; // Tune (m/s^2)
@@ -65,7 +71,7 @@ namespace algo {
         PoseIntegrator() {}
 
         bool init();
-        void start_task();
+        void start_task(QueueHandle_t out_queue);
 
         bool calibrate_imu();
     };

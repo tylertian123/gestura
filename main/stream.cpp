@@ -14,6 +14,7 @@
 
 #include "lwip/inet.h"
 #include "lwip/sockets.h"
+#include "portmacro.h"
 
 #include "sdkconfig.h"
 #include "util.hpp"
@@ -60,7 +61,8 @@ namespace io {
         return ESP_OK;
     }
 
-    void DataStreamer::start_task() {
+    void DataStreamer::start_task(QueueHandle_t in_queue) {
+        queue = in_queue;
         // Use priority of 1 for this task (larger number = higher priority)
         // Note main task has priority 1, pose integrator priority 4 and IMU SPI task has priority 8
         task_handle = xTaskCreateStatic(main_task_static, "data_streamer", STACK_SIZE, 
@@ -108,6 +110,35 @@ namespace io {
             // TODO: setsockopt, TCP_NODELAY?
 
             // TODO: actually send stuff
+            // Reset the queue, so old messages don't get sent
+            xQueueReset(queue);
+            while (true) {
+                Message msg;
+                // TODO: Add proper handling here
+                xQueueReceive(queue, &msg, portMAX_DELAY);
+                uint8_t buf[sizeof(Message)];
+                size_t buf_size = 0;
+
+                if (msg.type == Message::Type::GESTURE) {
+                    buf_size = Message::SIZE_GESTURE;
+                }
+                else if (msg.type == Message::Type::POSITION) {
+                    buf_size = Message::SIZE_POSITION;
+                }
+                else {
+                    ESP_LOGW(TAG, "Invalid message type received: %d", msg.type);
+                }
+                
+                if (buf_size) {
+                    memcpy(buf, &msg, buf_size);
+                    ssize_t bytes_left = buf_size;
+                    while (bytes_left) {
+                        // TODO: Add proper handling for connection close
+                        bytes_left -= check_fatal(send(client_sock, buf + (buf_size - bytes_left), bytes_left, 0), "send");
+                    }
+                    ESP_LOGD(TAG, "Sent message of type %d, len %d", msg.type, buf_size);
+                }
+            }
 
             shutdown(client_sock, SHUT_RD);
             close(client_sock);
