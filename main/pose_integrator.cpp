@@ -113,10 +113,10 @@ namespace algo {
                     self->index = self->next_index;
 
                     // Curr estimate for var of accel's norm
-                    float accel_var = self->var_sum_accel / (WINSIZE-1);
+                    float var_accel = self->var_sum_accel / (WINSIZE-1);
 
                     // Check if stationary, use as opportunity to correct drift
-                    if (accel_var < VAR_THRES) { // Relies on rotation being correct
+                    if (var_accel < VAR_THRES) { // Relies on rotation being correct
                         if (self->time_near_zero == 0) { // Beginning of zero accel period
                             self->pos_on_stop = self->pos;
                         }
@@ -144,7 +144,7 @@ namespace algo {
                     if (count >= 25) {
                         count = 0;
                         // ESP_LOGI(TAG, "dt: %f", self->dt);
-                        ESP_LOGI(TAG, "P: <%f, %f, %f> V: <%f, %f, %f> A: <%f, %f, %f>", self->pos(0), self->pos(1), self->pos(2), self->vel(0), self->vel(1), self->vel(2), self->accel_local(0), self->accel_local(1), self->accel_local(2));
+                        ESP_LOGI(TAG, "P: <%f, %f, %f> V: <%f, %f, %f> A: <%f, %f, %f> Var: <%f>", self->pos(0), self->pos(1), self->pos(2), self->vel(0), self->vel(1), self->vel(2), self->accel_local(0), self->accel_local(1), self->accel_local(2), var_accel);
                     }
 
                     self->start_time = self->end_time;

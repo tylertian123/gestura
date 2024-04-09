@@ -3,9 +3,6 @@
 #include <cstddef>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Eigen>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/rolling_mean.hpp>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
