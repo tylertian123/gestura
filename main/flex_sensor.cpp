@@ -92,4 +92,44 @@ namespace hw {
         }
         return ESP_OK;
     }
+
+    esp_err_t FlexSensorArray::bucket_values() {
+        // Hysteresis for short flex sensor
+        if (short_raw < INVALID_THRESHOLD) {
+            void(0); // No operation in Invalid (keeps previous value)
+        } 
+        else if (short_bucket == LOW) {
+            if (short_raw > SHORT_THRESHOLD_MIDRANGE_HIGH) short_bucket = MID;
+        }
+        else if (short_bucket == MID) {
+            if (short_raw > SHORT_THRESHOLD_MIDRANGE_HIGH) short_bucket = HIGH;
+            if (short_raw < SHORT_THRESHOLD_MIDRANGE_LOW) short_bucket = LOW;
+        }
+        else if (short_bucket == HIGH) {
+            if (short_raw < SHORT_THRESHOLD_HIGHRANGE_LOW) short_bucket = MID;
+        }
+
+        // Hysteresis for long flex sensor
+        if (long_raw < INVALID_THRESHOLD) {
+            void(0);
+        } 
+        else if (long_bucket == LOW) {
+            if (long_raw > LONG_THRESHOLD_MIDRANGE_HIGH) long_bucket = MID;
+        }
+        else if (long_bucket == MID) {
+            if (long_raw > LONG_THRESHOLD_MIDRANGE_HIGH) long_bucket = HIGH;
+            if (long_raw < LONG_THRESHOLD_MIDRANGE_LOW) long_bucket = LOW;
+        }
+        else if (long_bucket == HIGH) {
+            if (long_raw < LONG_THRESHOLD_HIGHRANGE_LOW) long_bucket = MID;
+        }
+
+        return ESP_OK;
+    }
+
+    esp_err_t FlexSensorArray::get_gesture(){
+        return ESP_OK;
+    }
+
+
 }
