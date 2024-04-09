@@ -33,7 +33,7 @@ namespace algo {
 
         // Increase this if we run out
         // StackType_t is uint8_t so this is in bytes
-        static constexpr size_t STACK_SIZE = 2048;
+        static constexpr size_t STACK_SIZE = 4096;
         TaskHandle_t task_handle = nullptr;
         StaticTask_t task_tcb;
         StackType_t task_stack[STACK_SIZE];
@@ -53,7 +53,7 @@ namespace algo {
         int64_t end_time = 0; // microseconds
 
         // Thresholds for determining if stationary (i.e. if we should correct drift)
-        static constexpr float ACCEL_THRES = 0.1f; // Tune (m/s^2)
+        static constexpr float ACCEL_THRES = 1.0f; // Tune (m/s^2)
         static constexpr int64_t TIME_THRES = 250000L; // Tune (us)
         int64_t time_near_zero = 0; // microseconds
 
@@ -66,5 +66,7 @@ namespace algo {
 
         bool init();
         void start_task();
+
+        bool calibrate_imu();
     };
 }

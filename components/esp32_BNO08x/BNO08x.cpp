@@ -1,4 +1,5 @@
 #include "BNO08x.hpp"
+#include "esp_log.h"
 
 bool BNO08x::isr_service_installed = {false};
 bno08x_config_t BNO08x::default_imu_config;
@@ -641,10 +642,10 @@ bool BNO08x::run_full_calibration_routine()
     calibrate_all(); // Turn on cal for Accel, Gyro, and Mag
 
     // Enable Game Rotation Vector output
-    enable_game_rotation_vector(100); // Send data update every 100ms
+    enable_game_rotation_vector(10000); // Send data update every 100ms
 
     // Enable Magnetic Field output
-    enable_magnetometer(100); // Send data update every 100ms
+    enable_magnetometer(10000); // Send data update every 100ms
 
     while (1)
     {
@@ -665,9 +666,9 @@ bool BNO08x::run_full_calibration_routine()
             ESP_LOGI(TAG, "Quaternion Rotation Vector: i: %.3f j: %.3f k: %.3f, real: %.3f, accuracy: %d", quat_I, quat_J, quat_K, quat_real,
                     quat_accuracy);
 
-            vTaskDelay(5 / portTICK_PERIOD_MS);
+            vTaskDelay(20 / portTICK_PERIOD_MS);
 
-            if ((magnetometer_accuracy >= (uint8_t) IMUAccuracy::MED) && (quat_accuracy == (uint8_t) IMUAccuracy::HIGH))
+            if ((magnetometer_accuracy == (uint8_t) IMUAccuracy::HIGH) && (quat_accuracy == (uint8_t) IMUAccuracy::HIGH))
                 high_accuracy++;
             else
                 high_accuracy = 0;
@@ -679,7 +680,7 @@ bool BNO08x::run_full_calibration_routine()
 
                 save_calibration_attempt = 0;
 
-                while (save_calibration_attempt < 20)
+                while (save_calibration_attempt < 50)
                 {
                     if (data_available())
                     {
@@ -693,20 +694,24 @@ bool BNO08x::run_full_calibration_routine()
                             save_calibration();
                             request_calibration_status();
                             save_calibration_attempt++;
+                            ESP_LOGI(TAG, "Retrying save");
                         }
+                    }
+                    else {
+                        ESP_LOGW(TAG, "Data unavailable when saving");
                     }
                 }
 
-                vTaskDelay(1 / portTICK_PERIOD_MS);
+                vTaskDelay(40 / portTICK_PERIOD_MS);
 
-                if (save_calibration_attempt >= 20)
+                if (save_calibration_attempt >= 50)
                     ESP_LOGE(TAG, "Calibration data failed to store.");
 
                 return false;
             }
         }
 
-        vTaskDelay(5 / portTICK_PERIOD_MS);
+        vTaskDelay(20 / portTICK_PERIOD_MS);
     }
 }
 

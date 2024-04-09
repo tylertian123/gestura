@@ -19,6 +19,12 @@ extern "C" void app_main(void) {
         ESP_LOGE(TAG, "Failed to initialize IMU");
         return;
     }
+    // if (!pose_int.calibrate_imu()) {
+    //     ESP_LOGE(TAG, "Calibration failed");
+    // }
+    // else {
+    //     ESP_LOGE(TAG, "Calibration successful");
+    // }
     pose_int.start_task();
     
     ESP_LOGI(TAG, "Started pose integrator");
