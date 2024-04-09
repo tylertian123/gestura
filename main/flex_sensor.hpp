@@ -66,5 +66,6 @@ namespace hw {
         esp_err_t read_raw();
         // Bucket Values into Gesture Ranges
         esp_err_t bucket_values();
+        esp_err_t get_gesture();
     };
 }
