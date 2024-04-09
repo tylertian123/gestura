@@ -1,4 +1,4 @@
-menu "Project Configuration"
+menu "Network Configuration"
 
     config STREAM_WIFI_SSID
         string "Wi-Fi AP SSID"
@@ -16,6 +16,13 @@ menu "Project Configuration"
         int "Wi-Fi AP channel"
         range 1 13
         default 1
+    
+    config STREAM_PORT
+        int "Port of socket for stream"
+        range 0 65535
+        default 43800
+        help
+            "Port number used for the socket server for the data stream (note IP address is hardcoded to 192.168.0.1)"
 endmenu
 
 menu "GPIO Allocation"

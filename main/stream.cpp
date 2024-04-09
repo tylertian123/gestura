@@ -1,9 +1,19 @@
 #include "stream.hpp"
 
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
+
 #include "esp_err.h"
+#include "esp_log.h"
+#include "esp_netif.h"
+#include "esp_netif_ip_addr.h"
+#include "esp_netif_types.h"
 #include "esp_wifi.h"
-#include "esp_wifi_types.h"
 #include "nvs_flash.h"
+
+#include "lwip/inet.h"
+#include "lwip/sockets.h"
 
 #include "sdkconfig.h"
 #include "util.hpp"
@@ -17,9 +27,17 @@ namespace io {
             RETURN_ON_ERR(nvs_flash_init());
         }
 
-        ESP_ERROR_CHECK(esp_netif_init());
-        ESP_ERROR_CHECK(esp_event_loop_create_default());
-        esp_netif_create_default_wifi_ap();
+        RETURN_ON_ERR(esp_netif_init());
+        RETURN_ON_ERR(esp_event_loop_create_default());
+        netif_inst = esp_netif_create_default_wifi_ap();
+        
+        esp_netif_ip_info_t ip_info;
+        ip_info.ip.addr = ESP_IP4TOADDR(192, 168, 0, 1);
+        ip_info.gw.addr = ip_info.ip.addr;
+        ip_info.netmask.addr = ESP_IP4TOADDR(255, 255, 255, 0);
+        RETURN_ON_ERR(esp_netif_dhcps_stop(netif_inst));
+        RETURN_ON_ERR(esp_netif_set_ip_info(netif_inst, &ip_info));
+        RETURN_ON_ERR(esp_netif_dhcps_start(netif_inst));
 
         wifi_init_config_t init_cfg = WIFI_INIT_CONFIG_DEFAULT();
         RETURN_ON_ERR(esp_wifi_init(&init_cfg));
@@ -40,5 +58,59 @@ namespace io {
         RETURN_ON_ERR(esp_wifi_start());
 
         return ESP_OK;
+    }
+
+    void DataStreamer::start_task() {
+        // Use priority of 1 for this task (larger number = higher priority)
+        // Note main task has priority 1, pose integrator priority 4 and IMU SPI task has priority 8
+        task_handle = xTaskCreateStatic(main_task_static, "data_streamer", STACK_SIZE, 
+            this, 2, task_stack, &task_tcb);
+    }
+
+    void DataStreamer::main_task_static(void *params) {
+        DataStreamer *self = reinterpret_cast<DataStreamer*>(params);
+        self->main_task();
+    }
+
+    int DataStreamer::check_fatal(int ret, const char *msg) {
+        int e = errno;
+        if (likely(ret >= 0)) {
+            return ret;
+        }
+        ESP_LOGE(TAG, "Critical failure (%d): %s: %s", ret, msg, strerror(e));
+        // TODO: Better handling here
+        // Stop task, clean up socket, etc?
+        abort();
+    }
+
+    void DataStreamer::main_task() {
+        sockaddr_in dest_addr;
+        dest_addr.sin_family = AF_INET;
+        // The htonx macros (where x denotes size) convert from hardware to network byte order
+        // Since the system endianness might be different than the network endianness
+        dest_addr.sin_port = htons(CONFIG_STREAM_PORT);
+        dest_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+        listen_sock = check_fatal(socket(AF_INET, SOCK_STREAM, IPPROTO_IP), "socket");
+        int opt = 1;
+        check_fatal(setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)), "setsockopt");
+        check_fatal(bind(listen_sock, reinterpret_cast<sockaddr*>(&dest_addr), sizeof(dest_addr)), "bind");
+        check_fatal(listen(listen_sock, 1), "listen");
+
+        ESP_LOGI(TAG, "Server listening");
+
+        while (true) {
+            sockaddr_in client_addr;
+            socklen_t addr_len = sizeof(client_addr);
+            client_sock = check_fatal(accept(listen_sock, reinterpret_cast<sockaddr*>(&client_addr), &addr_len), "accept");
+            ESP_LOGI(TAG, "Accepted client");
+
+            // TODO: setsockopt, TCP_NODELAY?
+
+            // TODO: actually send stuff
+
+            shutdown(client_sock, SHUT_RD);
+            close(client_sock);
+        }
     }
 }
