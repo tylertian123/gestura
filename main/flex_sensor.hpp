@@ -42,15 +42,16 @@ namespace hw {
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3710;
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 3610;
         // Invalid Value Threshold
-        static constexpr INVALID_THRESHOLD = 2900;
+        static constexpr int16_t INVALID_THRESHOLD = 2900;
         // Define Gesture Buckets
         static constexpr int8_t LOW = 0; // BENT
         static constexpr int8_t MID = 1;
         static constexpr int8_t HIGH = 2; // FLAT
         // Variables for Gesture Recognition
         static constexpr int8_t ERASE_CONDITION[2] = {LOW, LOW}; // {short, long}
-        static constexpr int8_t WRITE_CONDITION[2] = {MID, MID};
-        static constexpr int8_t CALIBRATE_POSITION_CONDITION[2] = {HIGH, HIGH};
+        static constexpr int8_t PEN_DOWN_CONDITION[2] = {MID, MID};
+        static constexpr int8_t PEN_UP_CONDITION[2] = {MID, HIGH};
+        static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, HIGH};
         // Gestures
         int8_t gesture = -1;
         static constexpr int8_t CALIBRATE = 0;
@@ -64,6 +65,7 @@ namespace hw {
         esp_err_t read_raw();
         // Bucket Values into Gesture Ranges
         esp_err_t bucket_values();
+        esp_err_t get_gesture();
         esp_err_t get_gesture();
     };
 }

@@ -102,14 +102,14 @@ namespace algo {
                     // Store re-used intermediate variables
                     float old_mean_accel = self->mean_accel;
                     float new_accel = self->accel.norm();
-                    float outgoing_accel = self->accels[next_index];
+                    float outgoing_accel = self->accels[self->next_index];
                     
                     // Recurvise formula (modification of Welford algo)
                     self->mean_accel += (new_accel - outgoing_accel) / WINSIZE;
                     self->var_sum_accel += (new_accel - old_mean_accel) * (new_accel - self->mean_accel) - (outgoing_accel - old_mean_accel) * (outgoing_accel - self->mean_accel);
                     
                     // Updates for next iter
-                    self->accels[next_index] = new_accel;
+                    self->accels[self->next_index] = new_accel;
                     self->index = self->next_index;
 
                     // Curr estimate for var of accel's norm
