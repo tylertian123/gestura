@@ -33,9 +33,6 @@ namespace hw {
         int8_t short_bucket = -1;
         int8_t long_bucket = -1;
         // Hysteresis Threshold
-        // - anything below 2000 skip value
-        // max reading 4081
-        // full bend, a little under 3000
         static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3380; // High threshold for Middle range
         static constexpr int16_t LONG_THRESHOLD_MIDRANGE_LOW = 3280; // Low threshold for Middle range
         static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_HIGH = 3710;
@@ -45,16 +42,22 @@ namespace hw {
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3710;
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 3610;
         // Invalid Value Threshold
-        static constexpr INVALID_THRESHOLD = 2900
+        static constexpr INVALID_THRESHOLD = 2900;
         // Define Gesture Buckets
         static constexpr int8_t LOW = 0; // BENT
         static constexpr int8_t MID = 1;
         static constexpr int8_t HIGH = 2; // FLAT
         // Variables for Gesture Recognition
-        int8_t[2] ERASE = {LOW, LOW}; // {short, long}
-        int8_t[2] PEN_DOWN = {MID, MID}
-        int8_t[2] PEN_UP = {MID, HIGH}
-        int8_t[2] CALIBRATE_POSITION = {HIGH, HIGH}
+        static constexpr int8_t[2] ERASE_CONDITION = {LOW, LOW}; // {short, long}
+        static constexpr int8_t[2] PEN_DOWN_CONDITION = {MID, MID};
+        static constexpr int8_t[2] PEN_UP_CONDITION = {MID, HIGH};
+        static constexpr int8_t[2] CALIBRATE_POSITION_CONDITION = {HIGH, HIGH};
+        // Gestures
+        int8_t gesture = -1;
+        static constexpr int8_t CALIBRATE = 0;
+        static constexpr int8_t PEN_UP = 1;
+        static constexpr int8_t PEN_DOWN = 2;
+        static constexpr int8_t ERASE = 3;
 
         esp_err_t init();
         esp_err_t stop();
