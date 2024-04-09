@@ -48,10 +48,10 @@ namespace hw {
         static constexpr int8_t MID = 1;
         static constexpr int8_t HIGH = 2; // FLAT
         // Variables for Gesture Recognition
-        static constexpr int8_t[2] ERASE_CONDITION = {LOW, LOW}; // {short, long}
-        static constexpr int8_t[2] PEN_DOWN_CONDITION = {MID, MID};
-        static constexpr int8_t[2] PEN_UP_CONDITION = {MID, HIGH};
-        static constexpr int8_t[2] CALIBRATE_POSITION_CONDITION = {HIGH, HIGH};
+        static constexpr int8_t ERASE_CONDITION[2] = {LOW, LOW}; // {short, long}
+        static constexpr int8_t PEN_DOWN_CONDITION[2] = {MID, MID};
+        static constexpr int8_t PEN_UP_CONDITION[2] = {MID, HIGH};
+        static constexpr int8_t CALIBRATE_POSITION_CONDITION[2] = {HIGH, HIGH};
         // Gestures
         int8_t gesture = -1;
         static constexpr int8_t CALIBRATE = 0;
