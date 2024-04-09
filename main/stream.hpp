@@ -15,9 +15,8 @@ namespace io {
     public:
         enum Gesture : uint8_t {
             CALIBRATION = 0,
-            PEN_UP = 1,
-            PEN_DOWN = 2,
-            ERASE = 3,
+            WRITE = 1
+            ERASE = 2,
         };
         struct Position {
             float x;

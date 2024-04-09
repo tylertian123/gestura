@@ -15,9 +15,8 @@ POSITION_RECEIVED = 1
 
 GESTURE_SIZE = 1
 GESTURE_CALIBRATE = 0
-GESTURE_PEN_DOWN = 1
-GESTURE_PEN_UP = 2
-GESTURE_ERASE = 3
+GESTURE_WRITE = 1
+GESTURE_ERASE = 2
 
 POSITION_SIZE = 4
 
@@ -31,6 +30,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # Main Loop
     while(True):
         action = int.from_bytes(s.recv(RECEIVED_SIZE), BYTE_ORDER)
+
+        turtle.home()
+        turtle.penup()
         print(action)
 
         # Process Gesture
@@ -41,30 +43,27 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if gesture == GESTURE_CALIBRATE:
                 # send turtle home
                 print('Home')
-                #turtle.home()
-            if gesture == GESTURE_PEN_DOWN:
+                turtle.penup()
+                turtle.home()
+            if gesture == GESTURE_WRITE:
                 # send turtle pen down
                 print('pen down')
-                #turtle.pendown()
-            if gesture == GESTURE_PEN_UP:
-                # send turtle pen up
-                print('pen up')
-                #turtle.penup()
+                turtle.pendown()
             if gesture == GESTURE_ERASE:
                 print('erase')
-                #turtle.clearscreen()
+                turtle.penup()
+                turtle.clearscreen()
         
         # Process Position
         elif action == POSITION_RECEIVED:
-            xPos = struct.unpack('f', s.recv(POSITION_SIZE)) * SCALE_FACTOR
-            yPos = struct.unpack('f', s.recv(POSITION_SIZE)) * SCALE_FACTOR
-            zPos = struct.unpack('f', s.recv(POSITION_SIZE)) * SCALE_FACTOR
-            print(xPos)
-            print(yPos)
-            print(zPos)
+            a = s.recv(POSITION_SIZE)
+            print(a)
+            xPos = struct.unpack('f', a)[0] * SCALE_FACTOR
+            yPos = struct.unpack('f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
+            zPos = struct.unpack('f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
+            print(f'X: {xPos}')
+            print(f'Y: {yPos}')
+            print(f'Z: {zPos}')
 
-            #turtle.setposition(xPos, yPos)
-
-            # move turtle to position
-            # TODO: Scaling
+            turtle.setposition(xPos, yPos)
 

@@ -129,8 +129,7 @@ namespace hw {
 
     esp_err_t FlexSensorArray::get_gesture(){
         if (short_bucket == CALIBRATE_CONDITION[0] && long_bucket == CALIBRATE_CONDITION[1]) gesture = CALIBRATE;
-        if (short_bucket == PEN_UP_CONDITION[0] && long_bucket == PEN_UP_CONDITION[1]) gesture = PEN_UP;
-        if (short_bucket == PEN_DOWN_CONDITION[0] && long_bucket == PEN_DOWN_CONDITION[1]) gesture = PEN_DOWN;
+        if (short_bucket == WRITE_CONDITION[0] && long_bucket == WRITE_CONDITION[1]) gesture = WRITE;
         if (short_bucket == ERASE_CONDITION[0] && long_bucket == ERASE_CONDITION[1]) gesture = ERASE;
         return ESP_OK;
     }
