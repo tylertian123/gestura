@@ -3,6 +3,9 @@
 #include <cstddef>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Eigen>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/rolling_mean.hpp>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -23,6 +26,8 @@
 #define IMU_CS CAT(GPIO_NUM_, CONFIG_IMU_CS)
 #define IMU_HINT CAT(GPIO_NUM_, CONFIG_IMU_HINT)
 #define IMU_RST CAT(GPIO_NUM_, CONFIG_IMU_RST)
+
+#define WINSIZE 100
 
 namespace algo {
     class PoseIntegrator {
@@ -58,8 +63,14 @@ namespace algo {
         int64_t last_send = 0; // microseconds
         static constexpr int64_t REPORT_PERIOD = 200000; // microseconds
 
+        float mean_accel = 0.0;
+        float var_sum_accel = 0.0;
+        float accels[WINSIZE] = {0.0};
+        char index = 0;
+        char next_index = 0;
+
         // Thresholds for determining if stationary (i.e. if we should correct drift)
-        static constexpr float ACCEL_THRES = 1.0f; // Tune (m/s^2)
+        static constexpr float VAR_THRES = 0.25f; // Tune (m/s^2)
         static constexpr int64_t TIME_THRES = 250000L; // Tune (us)
         int64_t time_near_zero = 0; // microseconds
 

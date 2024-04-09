@@ -96,8 +96,27 @@ namespace algo {
                     // Integrate to get vel
                     self->vel = self->vel + self->accel * self->dt;
 
+                    // Variance code
+                    self->next_index = (self->index + 1) % WINSIZE;    // Oldest accel value is at next_index, wrapping if needed
+                    
+                    // Store re-used intermediate variables
+                    float old_mean_accel = self->mean_accel;
+                    float new_accel = self->accel.norm();
+                    float outgoing_accel = self->accels[next_index];
+                    
+                    // Recurvise formula (modification of Welford algo)
+                    self->mean_accel += (new_accel - outgoing_accel) / WINSIZE;
+                    self->var_sum_accel += (new_accel - old_mean_accel) * (new_accel - self->mean_accel) - (outgoing_accel - old_mean_accel) * (outgoing_accel - self->mean_accel);
+                    
+                    // Updates for next iter
+                    self->accels[next_index] = new_accel;
+                    self->index = self->next_index;
+
+                    // Curr estimate for var of accel's norm
+                    float accel_var = self->var_sum_accel / (WINSIZE-1);
+
                     // Check if stationary, use as opportunity to correct drift
-                    if (self->accel.norm() < ACCEL_THRES) { // Relies on rotation being correct
+                    if (accel_var < VAR_THRES) { // Relies on rotation being correct
                         if (self->time_near_zero == 0) { // Beginning of zero accel period
                             self->pos_on_stop = self->pos;
                         }
