@@ -50,6 +50,7 @@ namespace algo {
                         .x = self->pos(0),
                         .y = self->pos(1),
                         .z = self->pos(2),
+                        .correcting = self->correcting;
                     }
                 };
                 if (xQueueSend(self->queue, &msg, 0) != pdTRUE) {
@@ -135,10 +136,12 @@ namespace algo {
                         if (self->time_near_zero == 0) { // Beginning of zero accel period
                             self->pos_on_stop = self->pos;
                         }
+                        self->correcting = true;
                         self->time_near_zero += (self->end_time - self->start_time);
                     }
                     else {
                         self->time_near_zero = 0;
+                        self->correcting = false;
                     }
 
                     // Check if we've had low accel for some time (i.e. a pause)

@@ -24,7 +24,7 @@
 #define IMU_HINT CAT(GPIO_NUM_, CONFIG_IMU_HINT)
 #define IMU_RST CAT(GPIO_NUM_, CONFIG_IMU_RST)
 
-#define WINSIZE_NORM 50
+#define WINSIZE_NORM 25
 #define WINSIZE_FILTER 20
 
 namespace algo {
@@ -68,6 +68,7 @@ namespace algo {
         float accels_norm[WINSIZE_NORM] = {0.0};
         uint16_t norm_index = 0;
         uint16_t norm_next_index = 0;
+        bool correcting = false;
 
         Eigen::Vector3f mean_accel{0, 0, 0};
         Eigen::Vector3f last_mean_accel{0, 0, 0};
@@ -77,7 +78,7 @@ namespace algo {
 
         // Thresholds for determining if stationary (i.e. if we should correct drift)
         static constexpr float VAR_THRES = 0.15f; // Tune (m/s^2)
-        static constexpr int64_t TIME_THRES = 250000L; // Tune (us)
+        static constexpr int64_t TIME_THRES = 100000L; // Tune (us)
         int64_t time_near_zero = 0; // microseconds
 
         Eigen::Vector3f pos_on_stop{0, 0, 0};

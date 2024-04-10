@@ -24,6 +24,7 @@ namespace io {
             float x;
             float y;
             float z;
+            bool correcting;
         };
 
         enum Type : uint8_t {
