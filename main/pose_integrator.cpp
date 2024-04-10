@@ -174,6 +174,9 @@ namespace algo {
     }
 
     void PoseIntegrator::erase() {
+    }
+
+    void PoseIntegrator::calibration() {
         pos << 0.0f, 0.0f, 0.0f;
         vel << 0.0f, 0.0f, 0.0f;
         accel << 0.0f, 0.0f, 0.0f;
@@ -195,10 +198,6 @@ namespace algo {
         time_near_zero = 0;
 
         pos_on_stop << 0.0f, 0.0f, 0.0f;
-    }
-
-    void PoseIntegrator::calibration() {
-
     }
 
     bool PoseIntegrator::calibrate_imu() {

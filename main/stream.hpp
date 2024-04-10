@@ -15,9 +15,10 @@ namespace io {
     public:
         enum Gesture : int8_t {
             INVALID = -1,
-            CALIBRATION = 0,
-            WRITE = 1,
-            ERASE = 2,
+            NONE = 0,
+            CALIBRATION = 1,
+            WRITE = 2,
+            ERASE = 3,
         };
         struct Position {
             float x;

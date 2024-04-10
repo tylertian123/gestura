@@ -49,8 +49,8 @@ extern "C" void app_main(void) {
         // Do nothing here for now
         // FreeRTOS will context switch to the pose integrator task for us
         ESP_ERROR_CHECK(flex_sensor_array.read_raw());
-        ESP_ERROR_CHECK(flex_sensor_array.bucket_values());
-        ESP_ERROR_CHECK(flex_sensor_array.get_gesture());
+        flex_sensor_array.bucket_values();
+        flex_sensor_array.get_gesture();
 
         if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION) {
             pose_int.calibration();

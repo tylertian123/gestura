@@ -64,8 +64,8 @@ namespace hw {
         // Read values from ADC pool and set long_raw and short_raw
         esp_err_t read_raw();
         // Bucket Values into Gesture Ranges
-        esp_err_t bucket_values();
-        esp_err_t get_gesture();
+        void bucket_values();
+        void get_gesture();
         bool set_gesture_status();
         bool get_gesture_status();
     };
