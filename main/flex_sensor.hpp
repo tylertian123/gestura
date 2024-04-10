@@ -35,12 +35,12 @@ namespace hw {
         int8_t long_bucket = HIGH;
         // Hysteresis Threshold
         static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_HIGH = 4000;
-        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3550; // High threshold for High range
-        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3650; // Low threshold for High range 
+        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3600; // High threshold for High range
+        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3850; // Low threshold for High range 
         static constexpr int16_t LONG_THRESHOLD_MIDRANGE_LOW = 3300;
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3800; 
-        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 2900;
-        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 3100; 
+        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 2600;
+        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 2900; 
         static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_LOW = 2400; 
         // Invalid Value Threshold
         static constexpr int16_t INVALID_THRESHOLD = 2000;
@@ -51,7 +51,7 @@ namespace hw {
         // Variables for Gesture Recognition
         static constexpr int8_t ERASE_CONDITION[2] = {LOW, LOW}; // {short, long}
         static constexpr int8_t WRITE_CONDITION[2] = {MID, MID};
-        static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, HIGH};
+        static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, LOW};
         // Gestures
         io::Message::Gesture gesture = io::Message::Gesture::INVALID;
         io::Message::Gesture last_gesture = io::Message::Gesture::INVALID; // Keep different from gesture to begin with
