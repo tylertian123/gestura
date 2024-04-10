@@ -3,6 +3,7 @@
 import socket
 import turtle
 import struct
+import time
 
 # SOCKET CONSTANTS
 HOST = "192.168.0.1"  # The server's hostname or IP address
@@ -27,43 +28,42 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # Initialize
     s.connect((HOST, PORT))
     turtle.home()
-    ##### CHANGE TO penup() AFTER DEBUGGING AND GESTURE CODE
-    turtle.pendown()
+    turtle.penup()
 
     # Main Loop
     while(True):
         action = int.from_bytes(s.recv(RECEIVED_SIZE), BYTE_ORDER)
-        a = s.recv(3)
-        print(action)
+        padding = s.recv(3) # Floats have additional 3 bytes of padding
 
         # Process Gesture
         if action == GESTURE_RECEIVED:
-            print('gesture')
             gesture = int.from_bytes(s.recv(GESTURE_SIZE), BYTE_ORDER)
 
             if gesture == GESTURE_CALIBRATE:
                 # send turtle home
-                print('Home')
+                print('GESTURE: CALIBRATE')
                 turtle.penup()
                 turtle.home()
-            if gesture == GESTURE_WRITE:
+            elif gesture == GESTURE_WRITE:
                 # send turtle pen down
-                print('pen down')
+                print('GESTURE: WRITE')
                 turtle.pendown()
-            if gesture == GESTURE_ERASE:
-                print('erase')
+            elif gesture == GESTURE_ERASE:
+                print('GESTURE: ERASE')
                 turtle.penup()
+                turtle.home()
                 turtle.clearscreen()
+            else:
+                print('GESTURE INVALID')
         
         # Process Position
         elif action == POSITION_RECEIVED:
-            print('Position')
             xPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
             yPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
             zPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
-            print(f'X: {xPos}')
-            print(f'Y: {yPos}')
-            print(f'Z: {zPos}')
 
             turtle.setposition(xPos, yPos)
+
+        else:
+            print('TYPE INVALID')
 
