@@ -53,9 +53,12 @@ namespace hw {
         static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, HIGH};
         // Gestures
         int8_t gesture = -1;
+        int8_t last_gesture = -2; // Keep different from gesture to begin with
         static constexpr int8_t CALIBRATE = 0;
         static constexpr int8_t WRITE = 1;
         static constexpr int8_t ERASE = 2;
+
+        bool change_status = true;
 
         esp_err_t init();
         esp_err_t stop();
@@ -65,5 +68,7 @@ namespace hw {
         // Bucket Values into Gesture Ranges
         esp_err_t bucket_values();
         esp_err_t get_gesture();
+        bool set_gesture_status();
+        bool get_gesture_status();
     };
 }

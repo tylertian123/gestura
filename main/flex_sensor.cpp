@@ -131,8 +131,10 @@ namespace hw {
         if (short_bucket == CALIBRATE_CONDITION[0] && long_bucket == CALIBRATE_CONDITION[1]) gesture = CALIBRATE;
         if (short_bucket == WRITE_CONDITION[0] && long_bucket == WRITE_CONDITION[1]) gesture = WRITE;
         if (short_bucket == ERASE_CONDITION[0] && long_bucket == ERASE_CONDITION[1]) gesture = ERASE;
+        if (gesture != last_gesture) change_status = true;
+        else change_status = false;
+        last_gesture = gesture;
         return ESP_OK;
     }
-
 
 }
