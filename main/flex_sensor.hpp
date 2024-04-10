@@ -31,8 +31,8 @@ namespace hw {
         int16_t long_raw = -1;
 
         // Variables and Constants for Bucketing
-        int8_t short_bucket = -1;
-        int8_t long_bucket = -1;
+        int8_t short_bucket = HIGH;
+        int8_t long_bucket = HIGH;
         // Hysteresis Threshold
         static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_HIGH = 4000;
         static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3550; // High threshold for High range

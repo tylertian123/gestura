@@ -104,7 +104,7 @@ namespace hw {
             if (short_raw > SHORT_THRESHOLD_MIDRANGE_HIGH) short_bucket = MID;
         }
         else if (short_bucket == MID) {
-            if (short_raw > SHORT_THRESHOLD_MIDRANGE_HIGH) short_bucket = HIGH;
+            if (short_raw > SHORT_THRESHOLD_HIGHRANGE_HIGH) short_bucket = HIGH;
             if (short_raw < SHORT_THRESHOLD_MIDRANGE_LOW) short_bucket = LOW;
         }
         else if (short_bucket == HIGH) {
@@ -119,7 +119,7 @@ namespace hw {
             if (long_raw > LONG_THRESHOLD_MIDRANGE_HIGH) long_bucket = MID;
         }
         else if (long_bucket == MID) {
-            if (long_raw > LONG_THRESHOLD_MIDRANGE_HIGH) long_bucket = HIGH;
+            if (long_raw > LONG_THRESHOLD_HIGHRANGE_HIGH) long_bucket = HIGH;
             if (long_raw < LONG_THRESHOLD_MIDRANGE_LOW) long_bucket = LOW;
         }
         else if (long_bucket == HIGH) {
