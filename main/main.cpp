@@ -1,3 +1,4 @@
+#include "err_reporter.hpp"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
@@ -24,6 +25,9 @@ int64_t last_send = 0;
 extern "C" void app_main(void) {
     
     ESP_LOGI(TAG, "Program init");
+
+    ESP_ERROR_CHECK(io::err_reporter.init());
+    io::err_reporter.set_status(io::ErrorReporter::Status::UNINIT);
 
     msg_queue = xQueueCreate(5, sizeof(io::Message));
 
