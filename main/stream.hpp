@@ -15,7 +15,7 @@ namespace io {
     public:
         enum Gesture : uint8_t {
             CALIBRATION = 0,
-            WRITE = 1
+            WRITE = 1,
             ERASE = 2,
         };
         struct Position {
@@ -28,13 +28,14 @@ namespace io {
             GESTURE = 0,
             POSITION = 1,
         } type;
+        uint8_t _padding[3] = {0};
         union {
             Gesture gesture;
             Position position;
         };
 
-        static constexpr size_t SIZE_GESTURE = sizeof(Type) + sizeof(Gesture);
-        static constexpr size_t SIZE_POSITION = sizeof(Type) + sizeof(Position);
+        static constexpr size_t SIZE_GESTURE = sizeof(type) + sizeof(_padding) + sizeof(gesture);
+        static constexpr size_t SIZE_POSITION = sizeof(type) + sizeof(_padding) + sizeof(position);
     };
 
     class DataStreamer {

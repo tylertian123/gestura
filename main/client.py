@@ -20,7 +20,7 @@ GESTURE_ERASE = 2
 
 POSITION_SIZE = 4
 
-BYTE_ORDER = 'big'
+BYTE_ORDER = 'little'
 SCALE_FACTOR = 1
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

@@ -49,13 +49,12 @@ namespace hw {
         static constexpr int8_t HIGH = 2; // FLAT
         // Variables for Gesture Recognition
         static constexpr int8_t ERASE_CONDITION[2] = {LOW, LOW}; // {short, long}
-        static constexpr int8_t PEN_DOWN_CONDITION[2] = {MID, MID};
-        static constexpr int8_t PEN_UP_CONDITION[2] = {MID, HIGH};
+        static constexpr int8_t WRITE_CONDITION[2] = {MID, MID};
         static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, HIGH};
         // Gestures
         int8_t gesture = -1;
         static constexpr int8_t CALIBRATE = 0;
-        static constexpr int8_t WRITE = 1
+        static constexpr int8_t WRITE = 1;
         static constexpr int8_t ERASE = 2;
 
         esp_err_t init();
@@ -65,7 +64,6 @@ namespace hw {
         esp_err_t read_raw();
         // Bucket Values into Gesture Ranges
         esp_err_t bucket_values();
-        esp_err_t get_gesture();
         esp_err_t get_gesture();
     };
 }

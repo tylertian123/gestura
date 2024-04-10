@@ -53,7 +53,7 @@ namespace algo {
                     }
                 };
                 if (xQueueSend(self->queue, &msg, 0) != pdTRUE) {
-                    ESP_LOGW(TAG, "Could not send pose: queue full");
+                    //ESP_LOGW(TAG, "Could not send pose: queue full");
                 }
             }
 
