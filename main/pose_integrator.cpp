@@ -154,12 +154,12 @@ namespace algo {
     }
 
     void PoseIntegrator::re_zero() {
-        self->pos(0) = 0;
-        self->pos(1) = 0;
-        self->pos(2) = 0;
-        self->vel(0) = 0;
-        self->vel(1) = 0;
-        self->vel(2) = 0;
+        pos(0) = 0;
+        pos(1) = 0;
+        pos(2) = 0;
+        vel(0) = 0;
+        vel(1) = 0;
+        vel(2) = 0;
     }
 
     bool PoseIntegrator::calibrate_imu() {
