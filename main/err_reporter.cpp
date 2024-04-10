@@ -51,7 +51,7 @@ namespace io {
             led_strip_set_pixel(led, 0, 255, 0, 0);
             break;
         case Status::WARN:
-            led_strip_set_pixel(led, 0, 255, 255, 0);
+            led_strip_set_pixel(led, 0, 255, 200, 0);
             break;
         default:
             break;

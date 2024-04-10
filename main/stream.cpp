@@ -107,7 +107,14 @@ namespace io {
             ESP_LOGI(TAG, "Accepted client");
             io::err_reporter.set_status(io::ErrorReporter::Status::NORMAL);
 
-            // TODO: setsockopt, TCP_NODELAY?
+            opt = 1;
+            setsockopt(client_sock, SOL_SOCKET, SO_KEEPALIVE, &opt, sizeof(opt));
+            setsockopt(client_sock, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof(opt));
+            opt = 5;
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPIDLE, &opt, sizeof(opt));
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPINTVL, &opt, sizeof(opt));
+            opt = 3;
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPCNT, &opt, sizeof(opt));
 
             // Reset the queue, so old messages don't get sent
             xQueueReset(queue);
