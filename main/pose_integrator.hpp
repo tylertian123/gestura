@@ -49,7 +49,9 @@ namespace algo {
 
         // In global frame
         Eigen::Vector3f accel{0, 0, 0};
+        Eigen::Vector3f last_accel{0, 0, 0};
         Eigen::Vector3f vel{0, 0, 0};
+        Eigen::Vector3f last_vel{0, 0, 0};
         Eigen::Vector3f pos{0, 0, 0};
 
         Eigen::Quaternionf rotation;

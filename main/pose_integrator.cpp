@@ -93,9 +93,6 @@ namespace algo {
                     Eigen::Quaternionf rotated = self->rotation * accel_local_q * self->rotation.inverse(); // Double check
                     self->accel = rotated.vec();
 
-                    // Integrate to get vel
-                    self->vel = self->vel + self->accel * self->dt;
-
                     // Variance code
                     self->next_index = (self->index + 1) % WINSIZE;    // Oldest accel value is at next_index, wrapping if needed
                     
@@ -114,6 +111,9 @@ namespace algo {
 
                     // Curr estimate for var of accel's norm
                     float var_accel = self->var_sum_accel / (WINSIZE-1);
+
+                    // Integrate to get vel
+                    self->vel = self->vel + ((self->last_accel * self->accel) / 2) * self->dt;
 
                     // Check if stationary, use as opportunity to correct drift
                     if (var_accel < VAR_THRES) { // Relies on rotation being correct
@@ -137,7 +137,8 @@ namespace algo {
                     }
 
                     // Integrate to get position
-                    self->pos = self->pos + self->vel * self->dt;
+                    self->pos = self->pos + ((self->last_vel * self->vel) / 2) * self->dt;
+                    // self->pos = self->pos + self->last_vel * self->dt + self->accel * self->dt * self->dt / 2;
 
                     // TODO: Remove (this is for demo/testing only)
                     count ++;
@@ -147,7 +148,10 @@ namespace algo {
                         ESP_LOGI(TAG, "P: <%f, %f, %f> V: <%f, %f, %f> A: <%f, %f, %f> Var: <%f>", self->pos(0), self->pos(1), self->pos(2), self->vel(0), self->vel(1), self->vel(2), self->accel_local(0), self->accel_local(1), self->accel_local(2), var_accel);
                     }
 
+                    // Keep track of prev values
                     self->start_time = self->end_time;
+                    self->last_vel = self->vel;
+                    self->last_accel = self->accel;
                 }
             }
         }
