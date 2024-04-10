@@ -113,7 +113,7 @@ namespace algo {
                     float var_accel = self->var_sum_accel / (WINSIZE-1);
 
                     // Integrate to get vel
-                    self->vel = self->vel + ((self->last_accel * self->accel) / 2) * self->dt;
+                    self->vel = self->vel + ((self->last_accel + self->accel) / 2) * self->dt;
 
                     // Check if stationary, use as opportunity to correct drift
                     if (var_accel < VAR_THRES) { // Relies on rotation being correct
@@ -137,7 +137,7 @@ namespace algo {
                     }
 
                     // Integrate to get position
-                    self->pos = self->pos + ((self->last_vel * self->vel) / 2) * self->dt;
+                    self->pos = self->pos + ((self->last_vel + self->vel) / 2) * self->dt;
                     // self->pos = self->pos + self->last_vel * self->dt + self->accel * self->dt * self->dt / 2;
 
                     // TODO: Remove (this is for demo/testing only)
