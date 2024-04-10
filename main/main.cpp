@@ -60,6 +60,10 @@ extern "C" void app_main(void) {
         ESP_ERROR_CHECK(flex_sensor_array.bucket_values());
         ESP_ERROR_CHECK(flex_sensor_array.get_gesture());
 
+        if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION) {
+            pose_int.re_zero();
+        }
+
         int64_t cur_time = esp_timer_get_time();
         if (cur_time - last_send > REPORT_PERIOD) {
             last_send = cur_time;

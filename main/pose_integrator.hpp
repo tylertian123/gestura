@@ -80,6 +80,7 @@ namespace algo {
 
         bool init();
         void start_task(QueueHandle_t out_queue);
+        void re_zero();
 
         bool calibrate_imu();
     };
