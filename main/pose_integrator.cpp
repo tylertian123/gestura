@@ -173,13 +173,32 @@ namespace algo {
         }
     }
 
-    void PoseIntegrator::re_zero() {
-        pos(0) = 0;
-        pos(1) = 0;
-        pos(2) = 0;
-        vel(0) = 0;
-        vel(1) = 0;
-        vel(2) = 0;
+    void PoseIntegrator::erase() {
+        pos << 0.0f, 0.0f, 0.0f;
+        vel << 0.0f, 0.0f, 0.0f;
+        accel << 0.0f, 0.0f, 0.0f;
+        last_vel << 0.0f, 0.0f, 0.0f;
+        last_accel << 0.0f, 0.0f, 0.0f;
+
+        mean_accel_norm = 0.0;
+        var_sum_accel_norm = 0.0;
+        memset(accels_norm, 0.0,  WINSIZE_NORM * sizeof(accels_norm[0]));
+        norm_index = 0;
+        norm_next_index = 0;
+
+        mean_accel << 0.0f, 0.0f, 0.0f;
+        last_mean_accel << 0.0f, 0.0f, 0.0f;
+        accels = Eigen::MatrixXd::Constant(3, WINSIZE_FILTER, 0.0);
+        index = 0;
+        next_index = 0;
+
+        time_near_zero = 0;
+
+        pos_on_stop << 0.0f, 0.0f, 0.0f;
+    }
+
+    void PoseIntegrator::calibration() {
+
     }
 
     bool PoseIntegrator::calibrate_imu() {

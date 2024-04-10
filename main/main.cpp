@@ -52,8 +52,12 @@ extern "C" void app_main(void) {
         ESP_ERROR_CHECK(flex_sensor_array.bucket_values());
         ESP_ERROR_CHECK(flex_sensor_array.get_gesture());
 
-        if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION || flex_sensor_array.gesture == io::Message::Gesture::ERASE) {
-            pose_int.re_zero();
+        if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION) {
+            pose_int.calibration();
+        }
+
+        if (flex_sensor_array.gesture == io::Message::Gesture::ERASE) {
+            pose_int.erase();
         }
 
         int64_t cur_time = esp_timer_get_time();

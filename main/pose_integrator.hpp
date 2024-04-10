@@ -89,7 +89,8 @@ namespace algo {
 
         esp_err_t init();
         void start_task(QueueHandle_t out_queue);
-        void re_zero();
+        void calibration();
+        void erase();
 
         bool calibrate_imu();
     };
