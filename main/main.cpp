@@ -60,7 +60,7 @@ extern "C" void app_main(void) {
         ESP_ERROR_CHECK(flex_sensor_array.bucket_values());
         ESP_ERROR_CHECK(flex_sensor_array.get_gesture());
 
-        if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION) {
+        if (flex_sensor_array.gesture == io::Message::Gesture::CALIBRATION || flex_sensor_array.gesture == io::Message::Gesture::ERASE) {
             pose_int.re_zero();
         }
 
@@ -75,6 +75,8 @@ extern "C" void app_main(void) {
                 //ESP_LOGW(TAG, "Could not send pose: queue full");
             }
             // ESP_LOGI(TAG, "GESTURE SENT");
+            ESP_LOGI(TAG, "GESTURE: %u", flex_sensor_array.gesture);
+
             flex_sensor_array.change_status = false;
         }
         DELAY_MS(100);
