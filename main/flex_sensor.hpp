@@ -42,7 +42,7 @@ namespace hw {
         static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 3100; 
         static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_LOW = 2400; 
         // Invalid Value Threshold
-        static constexpr int16_t INVALID_THRESHOLD = 2900;
+        static constexpr int16_t INVALID_THRESHOLD = 2000;
         // Define Gesture Buckets
         static constexpr int8_t LOW = 0; // BENT
         static constexpr int8_t MID = 1;
