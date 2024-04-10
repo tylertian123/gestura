@@ -5,6 +5,7 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 
+#include "err_reporter.hpp"
 #include "pose_integrator.hpp"
 #include "flex_sensor.hpp"
 #include "stream.hpp"
@@ -27,35 +28,22 @@ extern "C" void app_main(void) {
     ESP_LOGI(TAG, "Program init");
 
     ESP_ERROR_CHECK(io::err_reporter.init());
-    io::err_reporter.set_status(io::ErrorReporter::Status::UNINIT);
 
     msg_queue = xQueueCreate(5, sizeof(io::Message));
 
-    if (!pose_int.init()) {
-        ESP_LOGE(TAG, "Failed to initialize IMU");
-        abort();
-    }
-
+    CHECK_FATAL_ESP(pose_int.init());
+    pose_int.start_task(msg_queue);
     ESP_LOGI(TAG, "Started pose integrator");
 
-    pose_int.start_task(msg_queue);
-
-    ESP_ERROR_CHECK(flex_sensor_array.init());
-
+    CHECK_FATAL_ESP(flex_sensor_array.init());
     ESP_LOGI(TAG, "Started flex sensors");
 
-    // if (!pose_int.calibrate_imu()) {
-    //     ESP_LOGE(TAG, "Calibration failed");
-    // }
-    // else {
-    //     ESP_LOGE(TAG, "Calibration successful");
-    // }
-    // pose_int.start_task();
-
-    ESP_ERROR_CHECK(datastream.init());
+    CHECK_FATAL_ESP(datastream.init());
     datastream.start_task(msg_queue);
-
     ESP_LOGI(TAG, "Started data streamer");
+
+    ESP_LOGI(TAG, "Initialization complete");
+    io::err_reporter.set_status(io::ErrorReporter::Status::WAIT);
 
     while (true) {
         // Do nothing here for now

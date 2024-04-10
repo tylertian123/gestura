@@ -8,9 +8,9 @@
 #include "stream.hpp"
 
 namespace algo {
-    bool PoseIntegrator::init() {
+    esp_err_t PoseIntegrator::init() {
         if (!imu.initialize()) {
-            return false;
+            return ESP_FAIL;
         }
         // Enable data types here
         // See datasheet, section 6.9 (nice) https://www.ceva-ip.com/wp-content/uploads/2019/10/BNO080_085-Datasheet.pdf
@@ -18,7 +18,7 @@ namespace algo {
         // 5000 us between samples is 200 Hz
         imu.enable_rotation_vector(5000);
         imu.enable_linear_accelerometer(5000);
-        return true;
+        return ESP_OK;
     }
 
     void PoseIntegrator::start_task(QueueHandle_t out_queue) {

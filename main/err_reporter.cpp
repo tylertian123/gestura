@@ -1,6 +1,6 @@
 #include "err_reporter.hpp"
 
-#include <abort.h>
+#include <cstdlib>
 
 #include "esp_err.h"
 #include "esp_log.h"
@@ -31,7 +31,7 @@ namespace io {
             }
         };
         RETURN_ON_ERR(led_strip_new_rmt_device(&strip_conf, &rmt_conf, &led));
-        
+        set_status(Status::UNINIT);
         return ESP_OK;
     }
 
@@ -40,6 +40,9 @@ namespace io {
         switch (status) {
         case Status::UNINIT:
             led_strip_set_pixel(led, 0, 0, 0, 255);
+            break;
+        case Status::WAIT:
+            led_strip_set_pixel(led, 0, 0, 255, 255);
             break;
         case Status::NORMAL:
             led_strip_set_pixel(led, 0, 0, 255, 0);
@@ -56,14 +59,14 @@ namespace io {
         led_strip_refresh(led);
     }
 
-    void ErrorReporter::error(const char *component) {
-        ESP_LOGE(TAG, "Fatal error in %s!", component);
+    void ErrorReporter::error() {
+        ESP_LOGE(TAG, "Fatal error!");
         set_status(Status::ERROR);
         abort();
     }
 
-    void ErrorReporter::warn(const char *component) {
-        ESP_LOGW(TAG, "Warning in %s!", component);
+    void ErrorReporter::warn() {
+        ESP_LOGW(TAG, "Warning!");
         set_status(Status::WARN);
     }
 }

@@ -18,6 +18,7 @@
 
 #include "sdkconfig.h"
 #include "util.hpp"
+#include "err_reporter.hpp"
 
 namespace io {
     esp_err_t DataStreamer::init() {
@@ -80,9 +81,7 @@ namespace io {
             return ret;
         }
         ESP_LOGE(TAG, "Critical failure (%d): %s: %s", ret, msg, strerror(e));
-        // TODO: Better handling here
-        // Stop task, clean up socket, etc?
-        abort();
+        io::err_reporter.error();
     }
 
     void DataStreamer::main_task() {
@@ -106,10 +105,10 @@ namespace io {
             socklen_t addr_len = sizeof(client_addr);
             client_sock = check_fatal(accept(listen_sock, reinterpret_cast<sockaddr*>(&client_addr), &addr_len), "accept");
             ESP_LOGI(TAG, "Accepted client");
+            io::err_reporter.set_status(io::ErrorReporter::Status::NORMAL);
 
             // TODO: setsockopt, TCP_NODELAY?
 
-            // TODO: actually send stuff
             // Reset the queue, so old messages don't get sent
             xQueueReset(queue);
             while (true) {
@@ -133,13 +132,19 @@ namespace io {
                     memcpy(buf, &msg, buf_size);
                     ssize_t bytes_left = buf_size;
                     while (bytes_left) {
-                        // TODO: Add proper handling for connection close
-                        bytes_left -= check_fatal(send(client_sock, buf + (buf_size - bytes_left), bytes_left, 0), "send");
+                        ssize_t sent = send(client_sock, buf + (buf_size - bytes_left), bytes_left, 0);
+                        if (sent < 0) {
+                            ESP_LOGW(TAG, "Client disconnected");
+                            io::err_reporter.warn();
+                            goto cleanup;
+                        }
+                        bytes_left -= sent;
                     }
                     ESP_LOGD(TAG, "Sent message of type %d, len %d", msg.type, buf_size);
                 }
             }
 
+cleanup:
             shutdown(client_sock, SHUT_RD);
             close(client_sock);
         }

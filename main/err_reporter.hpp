@@ -4,14 +4,23 @@
 #include "led_strip.h"
 #include "led_strip_types.h"
 
+#define CHECK_FATAL_ESP(x) do {                                         \
+        esp_err_t err_rc_ = (x);                                        \
+        if (unlikely(err_rc_ != ESP_OK)) {                              \
+            ESP_ERROR_CHECK_WITHOUT_ABORT(x);                           \
+            io::err_reporter.error();                                   \
+        }                                                               \
+    } while(0)
+
 namespace io {
     class ErrorReporter {
     public:
         enum Status {
             UNINIT = 0,
-            NORMAL = 1,
-            WARN = 2,
-            ERROR = 3,
+            WAIT = 1,
+            NORMAL = 2,
+            WARN = 3,
+            ERROR = 4,
         };
 
     private:
@@ -26,8 +35,8 @@ namespace io {
         esp_err_t init();
         void set_status(Status status);
 
-        void error(const char *component);
-        void warn(const char *component);
+        [[noreturn]] void error();
+        void warn();
     };
 
     extern ErrorReporter err_reporter;

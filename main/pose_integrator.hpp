@@ -87,7 +87,7 @@ namespace algo {
     public:
         PoseIntegrator() {}
 
-        bool init();
+        esp_err_t init();
         void start_task(QueueHandle_t out_queue);
         void re_zero();
 
