@@ -21,18 +21,19 @@ GESTURE_ERASE = 2
 POSITION_SIZE = 4
 
 BYTE_ORDER = 'little'
-SCALE_FACTOR = 1
+SCALE_FACTOR = 500
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # Initialize
     s.connect((HOST, PORT))
+    turtle.home()
+    ##### CHANGE TO penup() AFTER DEBUGGING AND GESTURE CODE
+    turtle.pendown()
 
     # Main Loop
     while(True):
         action = int.from_bytes(s.recv(RECEIVED_SIZE), BYTE_ORDER)
-
-        turtle.home()
-        turtle.penup()
+        a = s.recv(3)
         print(action)
 
         # Process Gesture
@@ -56,11 +57,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         
         # Process Position
         elif action == POSITION_RECEIVED:
-            a = s.recv(POSITION_SIZE)
-            print(a)
-            xPos = struct.unpack('f', a)[0] * SCALE_FACTOR
-            yPos = struct.unpack('f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
-            zPos = struct.unpack('f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
+            print('Position')
+            xPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
+            yPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
+            zPos = struct.unpack('<f', s.recv(POSITION_SIZE))[0] * SCALE_FACTOR
             print(f'X: {xPos}')
             print(f'Y: {yPos}')
             print(f'Z: {zPos}')
