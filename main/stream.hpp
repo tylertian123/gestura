@@ -13,7 +13,8 @@
 namespace io {
     struct Message {
     public:
-        enum Gesture : uint8_t {
+        enum Gesture : int8_t {
+            INVALID = -1,
             CALIBRATION = 0,
             WRITE = 1,
             ERASE = 2,

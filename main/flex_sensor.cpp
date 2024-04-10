@@ -1,7 +1,9 @@
 #include "flex_sensor.hpp"
 #include "hal/adc_types.h"
 #include "soc/soc_caps.h"
+
 #include "util.hpp"
+#include "stream.hpp"
 
 #include <assert.h>
 
@@ -128,9 +130,9 @@ namespace hw {
     }
 
     esp_err_t FlexSensorArray::get_gesture(){
-        if (short_bucket == CALIBRATE_CONDITION[0] && long_bucket == CALIBRATE_CONDITION[1]) gesture = CALIBRATE;
-        if (short_bucket == WRITE_CONDITION[0] && long_bucket == WRITE_CONDITION[1]) gesture = WRITE;
-        if (short_bucket == ERASE_CONDITION[0] && long_bucket == ERASE_CONDITION[1]) gesture = ERASE;
+        if (short_bucket == CALIBRATE_CONDITION[0] && long_bucket == CALIBRATE_CONDITION[1]) gesture = io::Message::Gesture::CALIBRATION;
+        if (short_bucket == WRITE_CONDITION[0] && long_bucket == WRITE_CONDITION[1]) gesture = io::Message::Gesture::WRITE;
+        if (short_bucket == ERASE_CONDITION[0] && long_bucket == ERASE_CONDITION[1]) gesture = io::Message::Gesture::ERASE;
         if (gesture != last_gesture) change_status = true;
         else change_status = false;
         last_gesture = gesture;

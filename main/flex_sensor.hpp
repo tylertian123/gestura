@@ -9,6 +9,7 @@
 #include "sdkconfig.h"
 
 #include "util.hpp"
+#include "stream.hpp"
 
 #define FLEX_SHORT_CHAN CAT(ADC_CHANNEL_, CONFIG_FLEX_SHORT_ADC_CHAN)
 #define FLEX_LONG_CHAN CAT(ADC_CHANNEL_, CONFIG_FLEX_LONG_ADC_CHAN)
@@ -52,11 +53,8 @@ namespace hw {
         static constexpr int8_t WRITE_CONDITION[2] = {MID, MID};
         static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, HIGH};
         // Gestures
-        int8_t gesture = -1;
-        int8_t last_gesture = -2; // Keep different from gesture to begin with
-        static constexpr int8_t CALIBRATE = 0;
-        static constexpr int8_t WRITE = 1;
-        static constexpr int8_t ERASE = 2;
+        io::Message::Gesture gesture = io::Message::Gesture::INVALID;
+        io::Message::Gesture last_gesture = io::Message::Gesture::INVALID; // Keep different from gesture to begin with
 
         bool change_status = true;
 
