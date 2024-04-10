@@ -33,14 +33,14 @@ namespace hw {
         int8_t short_bucket = -1;
         int8_t long_bucket = -1;
         // Hysteresis Threshold
-        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3380; // High threshold for Middle range
-        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_LOW = 3280; // Low threshold for Middle range
-        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_HIGH = 3710;
-        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3610;
-        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 3380;
-        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_LOW = 3280;
-        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3710;
-        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 3610;
+        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_HIGH = 4000;
+        static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3550; // High threshold for High range
+        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3650; // Low threshold for High range 
+        static constexpr int16_t LONG_THRESHOLD_MIDRANGE_LOW = 3300;
+        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3800; 
+        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 2900;
+        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 3100; 
+        static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_LOW = 2400; 
         // Invalid Value Threshold
         static constexpr int16_t INVALID_THRESHOLD = 2900;
         // Define Gesture Buckets
