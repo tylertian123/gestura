@@ -24,7 +24,8 @@
 #define IMU_HINT CAT(GPIO_NUM_, CONFIG_IMU_HINT)
 #define IMU_RST CAT(GPIO_NUM_, CONFIG_IMU_RST)
 
-#define WINSIZE 50
+#define WINSIZE_NORM 50
+#define WINSIZE_FILTER 20
 
 namespace algo {
     class PoseIntegrator {
@@ -60,11 +61,17 @@ namespace algo {
         int64_t start_time = 0; // microseconds
         int64_t end_time = 0; // microseconds
         int64_t last_send = 0; // microseconds
-        static constexpr int64_t REPORT_PERIOD = 200000; // microseconds
+        static constexpr int64_t REPORT_PERIOD = 20000; // microseconds
 
-        float mean_accel = 0.0;
-        float var_sum_accel = 0.0;
-        float accels[WINSIZE] = {0.0};
+        float mean_accel_norm = 0.0;
+        float var_sum_accel_norm = 0.0;
+        float accels_norm[WINSIZE_NORM] = {0.0};
+        uint16_t norm_index = 0;
+        uint16_t norm_next_index = 0;
+
+        Eigen::Vector3f mean_accel{0, 0, 0};
+        Eigen::Vector3f last_mean_accel{0, 0, 0};
+        Eigen::MatrixXd accels = Eigen::MatrixXd::Constant(3, WINSIZE_FILTER, 0.0);
         uint16_t index = 0;
         uint16_t next_index = 0;
 

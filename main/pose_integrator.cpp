@@ -94,29 +94,44 @@ namespace algo {
                     self->accel = rotated.vec();
 
                     // Variance code
-                    self->next_index = (self->index + 1) % WINSIZE;    // Oldest accel value is at next_index, wrapping if needed
+                    self->norm_next_index = (self->norm_index + 1) % WINSIZE_NORM;    // Oldest accel value is at norm_next_index, wrapping if needed
                     
                     // Store re-used intermediate variables
-                    float old_mean_accel = self->mean_accel;
-                    float new_accel = self->accel.norm();
-                    float outgoing_accel = self->accels[self->next_index];
+                    float old_mean_accel_norm = self->mean_accel_norm;
+                    float new_accel_norm = self->accel.norm();
+                    float outgoing_accel_norm = self->accels_norm[self->norm_next_index];
                     
-                    // Recurvise formula (modification of Welford algo)
-                    self->mean_accel += (new_accel - outgoing_accel) / WINSIZE;
-                    self->var_sum_accel += (new_accel - old_mean_accel) * (new_accel - self->mean_accel) - (outgoing_accel - old_mean_accel) * (outgoing_accel - self->mean_accel);
+                    // Recursive formula (modification of Welford algo)
+                    self->mean_accel_norm += (new_accel_norm - outgoing_accel_norm) / WINSIZE_NORM;
+                    self->var_sum_accel_norm += (new_accel_norm - old_mean_accel_norm) * (new_accel_norm - self->mean_accel) - (outgoing_accel_norm - old_mean_accel_norm) * (outgoing_accel_norm - self->mean_accel_norm);
                     
                     // Updates for next iter
-                    self->accels[self->next_index] = new_accel;
-                    self->index = self->next_index;
+                    self->accels_norm[self->norm_next_index] = new_accel_norm;
+                    self->norm_index = self->norm_next_index;
 
                     // Curr estimate for var of accel's norm
-                    float var_accel = self->var_sum_accel / (WINSIZE-1);
+                    float var_accel_norm = self->var_sum_accel_norm / (WINSIZE_NORM-1);
+
+                    // Filtering code
+                    self->next_index = (self->index + 1) % WINSIZE_FILTER;
+
+                    Eigen::Vector3f outgoing_accel{0, 0, 0};
+                    outgoing_accel(0) = self->accels(0, self->next_index); // TODO: do better
+                    outgoing_accel(1) = self->accels(1, self->next_index);
+                    outgoing_accel(2) = self->accels(2, self->next_index);
+
+                    self->mean_accel += (self->accel - outgoing_accel) / WINSIZE_FILTER;
+
+                    self->accels(0, self->next_index) = self->accel(0); // TODO: do better
+                    self->accels(1, self->next_index) = self->accel(1);
+                    self->accels(2, self->next_index) = self->accel(2);
+                    self->index = self->next_index;
 
                     // Integrate to get vel
-                    self->vel = self->vel + ((self->last_accel + self->accel) / 2) * self->dt;
+                    self->vel = self->vel + ((self->last_mean_accel + self->mean_accel) / 2) * self->dt;
 
                     // Check if stationary, use as opportunity to correct drift
-                    if (var_accel < VAR_THRES) { // Relies on rotation being correct
+                    if (var_accel_norm < VAR_THRES) { // Relies on rotation being correct
                         if (self->time_near_zero == 0) { // Beginning of zero accel period
                             self->pos_on_stop = self->pos;
                         }
@@ -138,7 +153,7 @@ namespace algo {
 
                     // Integrate to get position
                     self->pos = self->pos + ((self->last_vel + self->vel) / 2) * self->dt;
-                    // self->pos = self->pos + self->last_vel * self->dt + self->accel * self->dt * self->dt / 2;
+                    // self->pos = self->pos + self->last_vel * self->dt + self->mean_accel * self->dt * self->dt / 2;
 
                     // TODO: Remove (this is for demo/testing only)
                     count ++;
@@ -152,6 +167,7 @@ namespace algo {
                     self->start_time = self->end_time;
                     self->last_vel = self->vel;
                     self->last_accel = self->accel;
+                    self->last_mean_accel = self->mean_accel;
                 }
             }
         }
