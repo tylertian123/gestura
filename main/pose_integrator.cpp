@@ -103,7 +103,7 @@ namespace algo {
                     
                     // Recursive formula (modification of Welford algo)
                     self->mean_accel_norm += (new_accel_norm - outgoing_accel_norm) / WINSIZE_NORM;
-                    self->var_sum_accel_norm += (new_accel_norm - old_mean_accel_norm) * (new_accel_norm - self->mean_accel) - (outgoing_accel_norm - old_mean_accel_norm) * (outgoing_accel_norm - self->mean_accel_norm);
+                    self->var_sum_accel_norm += (new_accel_norm - old_mean_accel_norm) * (new_accel_norm - self->mean_accel_norm) - (outgoing_accel_norm - old_mean_accel_norm) * (outgoing_accel_norm - self->mean_accel_norm);
                     
                     // Updates for next iter
                     self->accels_norm[self->norm_next_index] = new_accel_norm;
@@ -160,7 +160,7 @@ namespace algo {
                     if (count >= 25) {
                         count = 0;
                         // ESP_LOGI(TAG, "dt: %f", self->dt);
-                        ESP_LOGI(TAG, "P: <%f, %f, %f> V: <%f, %f, %f> A: <%f, %f, %f> Var: <%f>", self->pos(0), self->pos(1), self->pos(2), self->vel(0), self->vel(1), self->vel(2), self->accel_local(0), self->accel_local(1), self->accel_local(2), var_accel);
+                        ESP_LOGI(TAG, "P: <%f, %f, %f> V: <%f, %f, %f> A: <%f, %f, %f> Var: <%f>", self->pos(0), self->pos(1), self->pos(2), self->vel(0), self->vel(1), self->vel(2), self->accel_local(0), self->accel_local(1), self->accel_local(2), var_accel_norm);
                     }
 
                     // Keep track of prev values
