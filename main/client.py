@@ -43,14 +43,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 # send turtle home
                 print('GESTURE: CALIBRATE')
                 turtle.penup()
-                turtle.home()
+                #turtle.home()
             elif gesture == GESTURE_WRITE:
                 # send turtle pen down
                 print('GESTURE: WRITE')
                 turtle.pendown()
             elif gesture == GESTURE_ERASE:
                 print('GESTURE: ERASE')
-                turtle.penup()
+                # turtle.penup()
                 turtle.home()
                 turtle.clearscreen()
             else:
