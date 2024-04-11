@@ -50,7 +50,7 @@ namespace hw {
         static constexpr int8_t HIGH = 2; // FLAT
         // Variables for Gesture Recognition
         static constexpr int8_t ERASE_CONDITION[2] = {LOW, LOW}; // {short, long}
-        static constexpr int8_t WRITE_CONDITION[2] = {MID, MID};
+        static constexpr int8_t WRITE_CONDITION[2] = {LOW, HIGH};
         static constexpr int8_t CALIBRATE_CONDITION[2] = {HIGH, LOW};
         // Gestures
         io::Message::Gesture gesture = io::Message::Gesture::INVALID;
