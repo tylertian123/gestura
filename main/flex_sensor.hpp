@@ -38,7 +38,7 @@ namespace hw {
         static constexpr int16_t LONG_THRESHOLD_HIGHRANGE_LOW = 3600; // High threshold for High range
         static constexpr int16_t LONG_THRESHOLD_MIDRANGE_HIGH = 3850; // Low threshold for High range 
         static constexpr int16_t LONG_THRESHOLD_MIDRANGE_LOW = 3300;
-        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3800; 
+        static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_HIGH = 3500; 
         static constexpr int16_t SHORT_THRESHOLD_HIGHRANGE_LOW = 2600;
         static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_HIGH = 2900; 
         static constexpr int16_t SHORT_THRESHOLD_MIDRANGE_LOW = 2400; 
